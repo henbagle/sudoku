@@ -7,6 +7,11 @@ class Coord {
         this.c = c;
     }
 }
+
+function mates(coord) {
+    return rowMates(coord).concat(colMates(coord), gridMates(coord));
+}
+
 // Mate finding functions. Should these become methods of a Coord?
 function rowMates(coord) {
     // Return array of Coords for the row mates of this Coord.
@@ -86,9 +91,9 @@ function gridOffMates(coord) {
     let mates = []
     let rOffsets = getOffMateOffsets(coord.r)
     let cOffsets = getOffMateOffsets(coord.c)
-    for (i of rOffsets) {
-        for (j of cOffsets) {
-            mates.push(new Coord(coord.r + i, coord.c + j))
+    for (let i of rOffsets) {
+        for (let j of cOffsets) {
+            mates.push(new Coord(coord.r + i, coord.c + j));
         }
     }
     return mates
@@ -105,3 +110,14 @@ function getOffMateOffsets(i) {
     }
     return offsets
 }
+
+export {
+    Coord,
+    mates,
+    rowMates,
+    colMates,
+    gridMates,
+    gridColMates,
+    gridOffMates,
+    gridRowMates,
+};
