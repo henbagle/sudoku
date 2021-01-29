@@ -5,7 +5,7 @@ import gridReducer from "../reducer";
 
 const Game = (props) => {
     const [gridState, dispatch] = useReducer(gridReducer, emptyGrid())
-    const [selected, setSelected] = useState([])
+    const [selected, setSelected] = useState({r:null, c:null})
 
     return ( 
     <div className="">
@@ -17,8 +17,8 @@ const Game = (props) => {
                 dispatch({type: "INP", value:e.target.value, coords:coords})
             }}/>
 
-        <pre className="mt-3">
-            {(selected.length > 0 ? JSON.stringify(gridState[selected[1]][selected[0]]): null)}
+        <pre className="mt-3 text-sm">
+            {(selected.r != null ? JSON.stringify(gridState[selected.r][selected.c]): null)}
         </pre>
     </div> );
 }

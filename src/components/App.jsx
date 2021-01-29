@@ -1,12 +1,12 @@
 import React from 'react';
 import Header from "./Header";
 import Footer from "./Footer";
-import Main from "./Main"
+import SudokuGamePage from "./SudokuGamePage"
 
 function App() {
     return (<div>
         <Header />,
-        <Main />,
+        <SudokuGamePage />,
         <Footer />  
     </div>)
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Cell = ({detVal, editable, coords, onFocus, tryInputNumber}) => {
+const Cell = ({detVal, editable, coords, onFocus, tryInputNumber, color}) => {
 
-    const inputClasses = `h-12 w-12 ${calculateBorderStyle(coords)} focus:ring focus:ring-inset focus:bg-blue-50 
+    const inputClasses = `h-12 w-12 ${calculateBorderStyle(coords)} ${calculateBgColor(color)} focus:ring focus:ring-inset focus:bg-blue-50 
                         text-2xl text-center ${editable ? "": "font-semibold bg-white"}`
     const value = ((detVal === 0) ? "" : detVal)
 
@@ -18,6 +18,16 @@ const Cell = ({detVal, editable, coords, onFocus, tryInputNumber}) => {
     );
 }
 
+function calculateBgColor(color)
+{
+    switch (color) {
+        case "row": return "bg-red-100";
+        case "col": return "bg-green-100";
+        case "grid": return "bg-yellow-100";
+        default: return "";
+    }
+}
+
 function calculateBorderStyle(coords)
 {
     const INITIAL_BORDER = "border border-gray-700";
@@ -27,8 +37,8 @@ function calculateBorderStyle(coords)
     const B = " border-b-2";
 
     let outputStyle = INITIAL_BORDER;
-    const subgridX = coords[0] % 3; // Position within local 3x3 grid
-    const subgridY = coords[1] % 3;
+    const subgridX = coords.c % 3; // Position within local 3x3 grid
+    const subgridY = coords.r % 3;
 
     switch(subgridX)
     {

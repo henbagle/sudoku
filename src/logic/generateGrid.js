@@ -5,7 +5,11 @@ const emptyGrid = () => {
         for (let j = 0; j < 9; j++) {
             let randNumber = Math.floor(Math.random() * 9) + 1;
             const display = Math.random();
-            row[j] = { detVal: randNumber, coords: [j, i], editable: false };
+            row[j] = {
+                detVal: randNumber,
+                coords: { r: i, c: j },
+                editable: false,
+            };
             if (display > 0.4) {
                 row[j].detVal = 0;
                 row[j].editable = true;

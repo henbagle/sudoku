@@ -1,7 +1,7 @@
 import React from 'react';
 import Game from "./SudokuGrid/Game"
 
-const Main = () => {
+const SudokuGamePage = () => {
     return ( <main>
         <div className="flex justify-center mt-12">
             <Game />
@@ -9,4 +9,4 @@ const Main = () => {
     </main> );
 }
  
-export default Main;
+export default SudokuGamePage;

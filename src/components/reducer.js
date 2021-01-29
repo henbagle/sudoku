@@ -12,8 +12,8 @@ export default function gridReducer(state, action) {
             else return state;
 
             return update(state, {
-                [action.coords[1]]: {
-                    [action.coords[0]]: { detVal: { $set: targetNumber } },
+                [action.coords.r]: {
+                    [action.coords.c]: { detVal: { $set: targetNumber } },
                 },
             });
         }
