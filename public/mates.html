@@ -1,0 +1,63 @@
+
+<!-- HTML form that tests sudoku mate finding -->
+<html>
+<head>
+    <script type="text/javascript" src="../src/logic/sudokuLib.js" ></script>
+    <script language="javascript" type="text/javascript">
+    <!--
+    // import * as myLib from 'myLib.js';
+    function doForm1(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        let r = parseInt(e.target.elements.r.value)
+        let c = parseInt(e.target.elements.c.value)
+        
+        let outputDiv = document.getElementById("form1Results");
+        let text = "";
+
+        if (r < 0 || r > 8 || c < 0 || c > 8) {
+            text = "Invalid coordinate"
+        }
+        else {
+            let coord = new Coord(r,c);
+
+            text += formatMates("Row mates", rowMates(coord))
+            text += formatMates("Col mates", colMates(coord))
+            text += formatMates("Grid mates", gridMates(coord))
+            text += formatMates("Grid Row mates", gridRowMates(coord))
+            text += formatMates("Grid Col mates", gridColMates(coord))
+            text += formatMates("Grid Off mates", gridOffMates(coord))
+        }
+        outputDiv.innerHTML = text;
+        console.log(outputDiv);
+        //dumpObject(outputDiv);
+    }
+    function formatMates(label, mates) {
+        let text = `${label}: `;
+        for (let m of mates) {
+            text += `(${m.r},${m.c}) &nbsp;`;
+        }
+        text += "<br />\n";
+        return text
+    }
+    //-->
+    </script>
+</head>
+<body>
+    <form id="form1" action="">
+        Row: <input type="number" name="r">
+        Column: <input type="number" name="c">
+        <input type="submit"  value="Submit">
+    </form>
+    <script language="javascript" type="text/javascript">
+    <!--
+    const form1=document.getElementById("form1")
+    form1.addEventListener("submit", doForm1)
+    //-->
+    </script>
+    <div id="form1Results">
+    initial text
+    </div>
+
+</body>
+</html>
