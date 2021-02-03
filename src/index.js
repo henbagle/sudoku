@@ -3,6 +3,9 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
+import { enableAllPlugins } from "immer";
+
+enableAllPlugins();
 
 ReactDOM.render(
     <React.StrictMode>
