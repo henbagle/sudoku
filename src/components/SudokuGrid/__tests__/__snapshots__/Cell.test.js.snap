@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cell gets rendered 1`] = `
+<input
+  className="h-12 w-12 border border-gray-700  focus:ring focus:ring-inset focus:bg-blue-50 
+                        text-2xl text-center "
+  disabled={false}
+  onChange={[Function]}
+  onFocus={[Function]}
+  type="text"
+  value=""
+/>
+`;
+
+exports[`Cell gets rendered 2`] = `
+<input
+  className="h-12 w-12 border border-gray-700 border-r-2 border-b-2  focus:ring focus:ring-inset focus:bg-blue-50 
+                        text-2xl text-center font-semibold bg-white"
+  disabled={true}
+  onChange={[Function]}
+  onFocus={[Function]}
+  type="text"
+  value={1}
+/>
+`;
