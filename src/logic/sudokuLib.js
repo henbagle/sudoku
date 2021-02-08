@@ -1,22 +1,67 @@
+//
+// Sudoku classes, reasoning utilities
+//
+class GameParams {
+    constructor(gridBase) {
+        this.gridBase = gridBase;         // the grid is gridBase^2 x gridBase^2
+        this.numRows  = this.gridBase**2; // number of rows and cols
+        this.minCoord = 0;                // coords are 0 .. maxCoord
+        this.maxCoord = this.numRows - 1;
+        this.minValue = 1;                // values are 1 .. maxValue
+        this.maxValue = this.numRows;
+    }
+}
+const gameParams = new GameParams(3);   // only 3 works for now
 
-class Coord {
-    // A Coord is a row, col pair of integers: (r,c)
-    //   zero based: 0-8
-    constructor(r,c) {
-        this.r = r;
-        this.c = c;
+class Cell {
+    // A Cell in a GameState
+    constructor(r, c, value=null) {
+        this.coord = new Coord(r,c); 
+
+        if (value == null) {
+            this.editable = true;       // cell can be changed
+            this.value = null;
+        }
+        else {
+            this.editable = false;      // cell is part of initial setup
+            this.setValue(value);
+        }
+    }
+    setValue(value) {
+        // Set this Cell's value
+        if (gameParams.minValue <= value && value <= gameParams.maxValue) {
+            this.value = value;
+        }
+        else {
+            throw(new Error("Invalid cell value: ${value}\n"));
+        }
     }
 }
 
-function mates(coord) {
-    return rowMates(coord).concat(colMates(coord), gridMates(coord));
+class Coord {
+    // A Coord is a row, col pair of integers: (r,c). zero based
+    constructor(r,c) {
+        this.r = this.validateCoord(r);
+        this.c = this.validateCoord(c);
+        this.index = (r * gameParams.numRows) + c;
+    }
+    validateCoord(i) {
+        if (i < gameParams.minCoord || i > gameParams.maxCoord) {
+            throw(new Error("Invalid cell coordinate: ${i}\n"));
+        }
+        return i;
+    }
 }
 
 // Mate finding functions. Should these become methods of a Coord?
+function mates(coord) {
+    // Return array of distinct Coords of the mates of this coord
+    return rowMates(coord).concat(colMates(coord), gridOffMates(coord));
+}
 function rowMates(coord) {
     // Return array of Coords for the row mates of this Coord.
     let mates = []
-    for (let c = 0; c < 9; c++) {
+    for (let c = gameParams.minCoord; c <= gameParams.maxCoord; c++) {
         if (c !== coord.c) {
             mates.push(new Coord(coord.r, c))
         }
@@ -26,7 +71,7 @@ function rowMates(coord) {
 function colMates(coord) {
     // Return array of Coords for the column mates of this Coord.
     let mates = []
-    for (let r = 0; r < 9; r++) {
+    for (let r = gameParams.minCoord; r <= gameParams.maxCoord; r++) {
         if (r !== coord.r) {
             mates.push(new Coord(r, coord.c))
         }
@@ -40,8 +85,9 @@ function gridMates(coord) {
 function gridRowMates(coord) {
     // Return array of Coords for the grid row mates of this Coord.
     // (the row mates that are in coord's 3x3 grid)
+    // Assumes gridBase = 3
     let mates = []
-    switch (coord.c % 3) {
+    switch (coord.c % gameParams.gridBase) {
     case 0:  {
         mates.push(new Coord(coord.r, coord.c+1));
         mates.push(new Coord(coord.r, coord.c+2));
@@ -64,8 +110,9 @@ function gridRowMates(coord) {
 function gridColMates(coord) {
     // Return array of Coords for the grid column mates of this Coord.
     // (the col mates that are in coord's 3x3 grid)
+    // Assumes gridBase = 3
     let mates = []
-    switch (coord.r % 3) {
+    switch (coord.r % gameParams.gridBase) {
     case 0:  {
         mates.push(new Coord(coord.r+1, coord.c));
         mates.push(new Coord(coord.r+2, coord.c));
@@ -102,8 +149,9 @@ function getOffMateOffsets(i) {
     // Return array of 2 offsets, the values to add to i to get the coord
     // values for the Off Mates on i's axis.
     // (the off mates that are in coord's 3x3 grid, but not in same row or col)
+    // Assumes gridBase = 3
     let offsets = []
-    switch (i % 3) {
+    switch (i % gameParams.gridBase) {
     case 0: { offsets = [1,2];   break; }
     case 1: { offsets = [-1,1];  break; }
     case 2: { offsets = [-2,-1]; break; }
@@ -112,6 +160,8 @@ function getOffMateOffsets(i) {
 }
 
 export {
+    gameParams,
+    Cell,
     Coord,
     mates,
     rowMates,
