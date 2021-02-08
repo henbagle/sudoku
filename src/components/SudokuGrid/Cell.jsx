@@ -64,5 +64,5 @@ function calculateBorderStyle(coords)
 
     return outputStyle;
 }
- 
+
 export default Cell;
