@@ -1,29 +1,44 @@
 import React from "react";
-import renderer from "react-test-renderer";
-import Cell from "../Cell.jsx";
+import { fireEvent, render } from "@testing-library/react";
+import Cell from "../Cell";
 
-const emptyCell = {
-    detVal: 0,
+const testCellProps = {
+    detVal: 5,
     editable: true,
-    coords: { r: 1, c: 1 },
-    onFocus: () => {},
-    tryInputNumber: () => {},
+    coords: { r: 1, c: 2 },
+    onFocus: jest.fn(),
+    tryInputNumber: jest.fn(),
+    color: null,
 };
-const defaultCell = {
-    detVal: 1,
+
+const testCellProps2 = {
+    detVal: 6,
     editable: false,
-    coords: { r: 2, c: 2 },
-    onFocus: () => {},
-    tryInputNumber: () => {},
+    coords: { r: 1, c: 2 },
+    onFocus: jest.fn(),
+    tryInputNumber: jest.fn(),
+    color: null,
 };
 
-test("Cell gets rendered", () => {
-    const emptyComponent = renderer.create(<Cell {...emptyCell} />);
-    const defaultComponent = renderer.create(<Cell {...defaultCell} />);
+test("Cell renders a form element", () => {
+    const { getByDisplayValue } = render(<Cell {...testCellProps} />);
 
-    let tree1 = emptyComponent.toJSON();
-    expect(tree1).toMatchSnapshot();
+    const element = getByDisplayValue(/5/);
 
-    let tree2 = defaultComponent.toJSON();
-    expect(tree2).toMatchSnapshot();
+    expect(element).toBeTruthy();
+    expect(element).not.toHaveAttribute("disabled");
+
+    fireEvent.focus(element);
+    expect(testCellProps.onFocus).toHaveBeenCalled();
+
+    fireEvent.change(element, { target: { value: "1" } });
+    expect(testCellProps.tryInputNumber).toHaveBeenCalled();
+});
+
+test("Cell is disabled when it is a default value", () => {
+    const { getByDisplayValue } = render(<Cell {...testCellProps2} />);
+    const element = getByDisplayValue(/6/);
+
+    expect(element).toBeTruthy();
+    expect(element).toBeDisabled();
 });
