@@ -1,3 +1,4 @@
+import { immerable } from "immer";
 //
 // Sudoku classes, reasoning utilities
 //
@@ -13,27 +14,43 @@ class GameParams {
 }
 const gameParams = new GameParams(3);   // only 3 works for now
 
+class GameState {
+    [immerable] = true;
+    constructor() {
+        this.cells = [];
+        for (let i = 0; i < gameParams.numRows; i++) {
+            for (let j = 0; j < gameParams.numRows; j++) {
+                this.cells.push(new Cell(i, j));
+            }
+        }
+    }
+}
+
 class Cell {
     // A Cell in a GameState
-    constructor(r, c, value=null) {
-        this.coord = new Coord(r,c); 
+
+    [immerable] = true;
+
+    constructor(r, c, value = null) {
+        this.coord = new Coord(r, c);
 
         if (value == null) {
-            this.editable = true;       // cell can be changed
+            this.editable = true; // cell can be changed
             this.value = null;
-        }
-        else {
-            this.editable = false;      // cell is part of initial setup
+        } else {
+            this.editable = false; // cell is part of initial setup
             this.setValue(value);
         }
     }
     setValue(value) {
         // Set this Cell's value
-        if (gameParams.minValue <= value && value <= gameParams.maxValue) {
+        if (!isNaN(value) &&
+            gameParams.minValue <= value &&
+            value <= gameParams.maxValue) 
+        {
             this.value = value;
-        }
-        else {
-            throw(new Error("Invalid cell value: ${value}\n"));
+        } else {
+            throw new Error("Invalid cell value: ${value}\n");
         }
     }
 }
@@ -161,6 +178,7 @@ function getOffMateOffsets(i) {
 
 export {
     gameParams,
+    GameState,
     Cell,
     Coord,
     mates,
