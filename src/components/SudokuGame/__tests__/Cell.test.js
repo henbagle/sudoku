@@ -1,20 +1,18 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import Cell from "../Cell";
+import { Cell as CellObj } from "../../../logic/sudokuLib";
 
 const testCellProps = {
-    detVal: 5,
-    editable: true,
-    coords: { r: 1, c: 2 },
+    cell: new CellObj(2, 2, 5),
     onFocus: jest.fn(),
     tryInputNumber: jest.fn(),
     color: null,
 };
+testCellProps.cell.editable = true;
 
 const testCellProps2 = {
-    detVal: 6,
-    editable: false,
-    coords: { r: 1, c: 2 },
+    cell: new CellObj(1, 2, 6),
     onFocus: jest.fn(),
     tryInputNumber: jest.fn(),
     color: null,

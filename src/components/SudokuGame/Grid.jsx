@@ -1,11 +1,11 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import Cell from "./Cell"
 import {colMates, rowMates, gridOffMates} from "../../logic/sudokuLib";
 
-// SudokuGrid - Stateless component
+// Grid - Stateless component
 // Manages CSS Grid, breaks out GameState into Cell components
 
-const SudokuGrid = ({gameState, selected, selectCell, tryInputNumber}) => {
+const Grid = ({gameState, selected, selectCell, tryInputNumber}) => {
     // const mates = {
     //     col: colMates(selected).map((el) => (JSON.stringify(el))),
     //     row: rowMates(selected).map((el) => (JSON.stringify(el))),
@@ -28,7 +28,7 @@ const SudokuGrid = ({gameState, selected, selectCell, tryInputNumber}) => {
                     onFocus={() => {selectCell(cell.coord.index)}} 
                     tryInputNumber={(e) => {tryInputNumber(e, cell.coord)}}
                     color={color}
-                    {...cell} 
+                    cell={cell}
                 />)}
             )}
 
@@ -36,4 +36,4 @@ const SudokuGrid = ({gameState, selected, selectCell, tryInputNumber}) => {
     );
 }
  
-export default SudokuGrid;
+export default Grid;

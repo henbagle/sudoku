@@ -1,11 +1,19 @@
-export default function inputNumber(draftState, action) {
-    const intVal = parseInt(action.value); // Attempt to parse whatever the user has input
+import pushGameState from "./pushGameState";
+
+export default function inputNumber(draft, action) {
+    pushGameState(draft, (gs) => {
+        // Set the new number
+        gs.cells[action.coord.index].value = parseSudokuNumber(action.value);
+    });
+}
+
+function parseSudokuNumber(number) {
+    const input = parseInt(number); // Attempt to parse whatever the user has input
 
     let targetNumber = null;
-    if (!isNaN(intVal) && intVal > 0 && intVal <= 9) {
-        targetNumber = intVal;
+    if (!isNaN(input) && input > 0 && input <= 9) {
+        targetNumber = input;
     }
-
-    // Set the new number
-    draftState.cells[action.coord.index].setValue(targetNumber);
+    return targetNumber;
 }
+

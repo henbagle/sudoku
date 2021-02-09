@@ -1,10 +1,10 @@
 import React from 'react';
-import Game from "./SudokuGrid/Game"
+import SudokuGame from "./SudokuGame/SudokuGame"
 
 const SudokuGamePage = () => {
     return ( <main>
         <div className="flex justify-center mt-12">
-            <Game />
+            <SudokuGame />
         </div>
     </main> );
 }

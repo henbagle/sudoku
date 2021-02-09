@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Cell = ({value, editable, coord, onFocus, tryInputNumber, color}) => {
+const Cell = ({cell, onFocus, tryInputNumber, color}) => {
 
-    const inputClasses = `h-12 w-12 ${calculateBorderStyle(coord)} ${calculateBgColor(color)} focus:ring focus:ring-inset focus:bg-blue-50 
-                        text-2xl text-center ${editable ? "": "font-semibold bg-white"}`
-    const displayValue = ((value === null) ? "" : value)
+    const inputClasses = `h-12 w-12 ${calculateBorderStyle(cell.coord)} ${calculateBgColor(color)} focus:ring focus:ring-inset focus:bg-blue-50 
+                        text-2xl text-center ${cell.editable ? "": "font-semibold bg-white"}`
+    const displayValue = ((cell.value === null) ? "" : cell.value)
 
     return ( 
         <input 
@@ -13,7 +13,7 @@ const Cell = ({value, editable, coord, onFocus, tryInputNumber, color}) => {
             onFocus={onFocus}
             onChange={tryInputNumber}
             className={inputClasses} 
-            disabled={!editable}>
+            disabled={!cell.editable}>
         </input>
     );
 }
