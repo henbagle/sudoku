@@ -6,6 +6,7 @@ class GameParams {
     constructor(gridBase) {
         this.gridBase = gridBase;         // the grid is gridBase^2 x gridBase^2
         this.numRows  = this.gridBase**2; // number of rows and cols
+        this.numCols  = this.numRows;
         this.minCoord = 0;                // coords are 0 .. maxCoord
         this.maxCoord = this.numRows - 1;
         this.minValue = 1;                // values are 1 .. maxValue
@@ -15,35 +16,110 @@ class GameParams {
 const gameParams = new GameParams(3);   // only 3 works for now
 
 class GameState {
+    // A GameState is the representation of Sudoku board at a point in time
     [immerable] = true;
     constructor() {
         this.cells = [];
         for (let i = 0; i < gameParams.numRows; i++) {
-            for (let j = 0; j < gameParams.numRows; j++) {
+            for (let j = 0; j < gameParams.numCols; j++) {
                 this.cells.push(new Cell(i, j));
             }
         }
+        this.lastCellIndex = this.cells.length -1
     }
+    setCellValue(r,c,v) {
+        // Set the value of the cell w/ Coords (r,c).
+        let newCell = new Cell(r,c,v);
+        this.cells[newCell.coord.index].setValue(newCell.value);
+    }
+    getInvalidCells() {
+        // Return list of Cells from the GameState that are invalid,
+        //   e.g., Cells in the same row, col, or grid that have the same
+        //         value
+        // If the empty list is returned, there are no row, col, or grid
+        //   contradictions
+        for (let i = gameParams.minCoord; i <= gameParams.maxCoord; i++) {
+            let dupsFromRow  = findDupValueCells(this.getRow(i));
+            let dupsFromCol  = findDupValueCells(this.getCol(i));
+            let dupsFromGrid = findDupValueCells(this.getGrid(i));
+            for (let dups of [dupsFromRow, dupsFromCol, dupsFromGrid]) {
+                if (dups.length > 0) { return  dups; }
+            }
+        }
+        return [];               // no dups found
+    }
+    getRow(i) {
+        // Return list of Cells in row i (0 <= i <= gameParams.maxRow)
+        let startI = i * gameParams.numCols
+        let endI   = startI + gameParams.numCols
+        return this.cells.slice(startI, endI)
+    }
+    getCol(i) {
+        // Return list of Cells in col i (0 <= i <= gameParams.maxCol)
+        let colCells = []
+        for (let j=i; j <= this.lastCellIndex; j += gameParams.numRows) {
+            colCells.push(this.cells[j])
+        }
+        return colCells
+    }
+    getGrid(i) {
+        // Return list of Cells from the i'th grid
+        let gridCells = []
+        let firstCoord = [ [0,0], [0,3], [0,6],
+                           [3,0], [3,3], [3,6],
+                           [6,0], [6,3], [6,6], ];
+        let fc = firstCoord[i];
+        for (let r=0; r < gameParams.gridBase; r++) {
+            for (let c=0; c < gameParams.gridBase; c++) {
+                let coord = new Coord(fc[0]+r, fc[1]+c);
+                gridCells.push(this.cells[coord.index]);
+            }
+        }
+        return gridCells
+    }
+}
+function findDupValueCells(arrayOfCells) {
+    // Scan arrayOfCells for duplicate values.
+    // Return an array of cells that have duplicate values.
+    // Return an empty array if all the cells have distinct values (or null)
+    let vals = new Map();         // vals.get(i) is [Cells w/ value i]
+    for (let cell of arrayOfCells) {
+        if (cell.value != null) {
+            let v = cell.value;
+            if (!vals.has(v)) {     // 1st time we've seen v
+                vals.set(v, []);
+            }
+            vals.get(v).push(cell)
+        }
+    }
+    for (let [v, cellList] of vals) {
+        if (cellList.length > 1) {  // return 1st duplicates found
+            return cellList;
+        }
+    }
+    return []                       // no duplicates found
 }
 
 class Cell {
     // A Cell in a GameState
-
     [immerable] = true;
 
     constructor(r, c, value = null) {
         this.coord = new Coord(r, c);
-
-        if (value == null) {
-            this.editable = true; // cell can be changed
-            this.value = null;
-        } else {
-            this.editable = false; // cell is part of initial setup
+        this.editable = true;
+        if (value != null) {
             this.setValue(value);
+        }
+        else {
+            this.value = null;
         }
     }
     setValue(value) {
         // Set this Cell's value
+        if (!this.editable) {
+            let m = "Cell (${this.coord.r},${this.coord.c}) is not editable\n";
+            throw new Error(m);
+        }
         if (!isNaN(value) &&
             gameParams.minValue <= value &&
             value <= gameParams.maxValue) 
@@ -179,6 +255,7 @@ function getOffMateOffsets(i) {
 export {
     gameParams,
     GameState,
+    findDupValueCells,
     Cell,
     Coord,
     mates,

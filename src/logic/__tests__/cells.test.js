@@ -11,17 +11,18 @@ test('test Coord class', () => {
     expect(new sl.Coord(3,3).index).toBe(30);
     expect(new sl.Coord(8,8).index).toBe(80);
 })
-test('test Cell class', () => {
+test('test Cell coord validation', () => {
     expect( () => {new sl.Cell(-1, 0)} ).toThrowError('Invalid');
     expect( () => {new sl.Cell(1, 54)} ).toThrowError('Invalid');
     expect( () => {new sl.Cell(2, 2)}  ).not.toThrowError('Invalid');
-
+})
+test('test Cell value setting', () => {
     expect( () => {new sl.Cell(1, 4, 0)}  ).toThrowError('Invalid');
     expect( () => {new sl.Cell(1, 4, 10)} ).toThrowError('Invalid');
     expect( () => {new sl.Cell(1, 4, 9)}  ).not.toThrowError('Invalid');
 
     expect(new sl.Cell(0, 0).editable   ).toBe(true);
     expect(new sl.Cell(0, 0).value      ).toBe(null);
-    expect(new sl.Cell(0, 0, 5).editable).toBe(false);
+    expect(new sl.Cell(0, 0, 5).editable).toBe(true);
     expect(new sl.Cell(0, 0, 5).value   ).toBe(5);
 })
