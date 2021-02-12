@@ -9,7 +9,6 @@ const testCellProps = {
     tryInputNumber: jest.fn(),
     color: null,
 };
-testCellProps.cell.editable = true;
 
 const testCellProps2 = {
     cell: new CellObj(1, 2, 6),
@@ -17,6 +16,7 @@ const testCellProps2 = {
     tryInputNumber: jest.fn(),
     color: null,
 };
+testCellProps2.cell.editable = false;
 
 test("Cell renders a form element", () => {
     const { getByDisplayValue } = render(<Cell {...testCellProps} />);
