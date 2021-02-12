@@ -10,6 +10,8 @@ const testCellProps = {
     color: null,
 };
 
+testCellProps.cell.possibleValues = [4, 6];
+
 const testCellProps2 = {
     cell: new CellObj(1, 2, 6),
     onFocus: jest.fn(),
@@ -33,10 +35,20 @@ test("Cell renders a form element", () => {
     expect(testCellProps.tryInputNumber).toHaveBeenCalled();
 });
 
-test("Cell is disabled when it is a default value", () => {
-    const { getByDisplayValue } = render(<Cell {...testCellProps2} />);
-    const element = getByDisplayValue(/6/);
+test("Cell renders possible values", () => {
+    const { getByLabelText } = render(<Cell {...testCellProps} />);
 
+    const possibleValues = getByLabelText("possible values");
+
+    expect(possibleValues).toBeTruthy();
+    expect(possibleValues).toHaveTextContent("4 6");
+});
+
+test("Cell is disabled when it is a default value", () => {
+    const { getByDisplayValue, getByLabelText } = render(
+        <Cell {...testCellProps2} />
+    );
+    const element = getByDisplayValue(/6/);
     expect(element).toBeTruthy();
     expect(element).toBeDisabled();
 });

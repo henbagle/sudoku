@@ -107,6 +107,8 @@ class Cell {
     constructor(r, c, value = null) {
         this.coord = new Coord(r, c);
         this.editable = true;
+        this.possibleValues = [];
+
         if (value != null) {
             this.setValue(value);
         }
