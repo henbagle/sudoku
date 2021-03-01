@@ -2,30 +2,46 @@ import React from 'react';
 
 const Cell = ({cell, onFocus, tryInputNumber, color}) => {
 
-    const inputClasses = `h-12 w-12 ${calculateBorderStyle(cell.coord)} ${calculateBgColor(color)} focus:ring focus:ring-inset focus:bg-blue-50 
+    const inputClasses = `h-12 w-12 ${calculateBorderStyle(cell.coord)} ${calculateBgColor(cell, color)} 
+                        focus:ring focus:ring-inset 
                         text-2xl text-center ${cell.editable ? "": "font-semibold bg-white"}`
+
     const displayValue = ((cell.value === null) ? "" : cell.value)
 
-    return ( 
-        <input 
-            type="text" 
-            value={displayValue}
-            onFocus={onFocus}
-            onChange={tryInputNumber}
-            className={inputClasses} 
-            disabled={!cell.editable}>
-        </input>
+    return (
+        <div>
+            <CellPossibleValues values={cell.possibleValues} />
+            <input 
+                type="text" 
+                value={displayValue}
+                onFocus={onFocus}
+                onChange={tryInputNumber}
+                className={inputClasses} 
+                disabled={!cell.editable}>
+            </input>
+        </div>
     );
 }
 
-function calculateBgColor(color)
+function CellPossibleValues(props)
 {
-    switch (color) {
-        case "row": return "bg-red-100";
-        case "col": return "bg-green-100";
-        case "grid": return "bg-yellow-100";
-        default: return "";
+    if(props.values && props.values.length > 0)
+    {
+        return (<div className="absolute px-1 py-0.5 text-xs w-12 truncate pointer-events-none"
+                aria-label="possible values">
+                    {props.values.join(" ")}
+                </div>)
     }
+    else return null
+}
+
+function calculateBgColor(cell, color)
+{
+    if(!cell.isValid || color == "red")
+    {
+        return "bg-red-100"
+    }
+    else return "focus:bg-blue-50";
 }
 
 function calculateBorderStyle(coord)

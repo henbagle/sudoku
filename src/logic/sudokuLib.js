@@ -20,6 +20,7 @@ class GameState {
     [immerable] = true;
     constructor() {
         this.cells = [];
+        this.invalidCells = [];
         for (let i = 0; i < gameParams.numRows; i++) {
             for (let j = 0; j < gameParams.numCols; j++) {
                 this.cells.push(new Cell(i, j));
@@ -39,11 +40,11 @@ class GameState {
         // If the empty list is returned, there are no row, col, or grid
         //   contradictions
         for (let i = gameParams.minCoord; i <= gameParams.maxCoord; i++) {
-            let dupsFromRow  = findDupValueCells(this.getRow(i));
-            let dupsFromCol  = findDupValueCells(this.getCol(i));
+            let dupsFromRow = findDupValueCells(this.getRow(i));
+            let dupsFromCol = findDupValueCells(this.getCol(i));
             let dupsFromGrid = findDupValueCells(this.getGrid(i));
             for (let dups of [dupsFromRow, dupsFromCol, dupsFromGrid]) {
-                if (dups.length > 0) { return  dups; }
+                if (dups.length > 0) return dups;
             }
         }
         return [];               // no dups found
@@ -107,26 +108,30 @@ class Cell {
     constructor(r, c, value = null) {
         this.coord = new Coord(r, c);
         this.editable = true;
+        this.possibleValues = [];
+        this.isValid = true;
+
         if (value != null) {
             this.setValue(value);
-        }
-        else {
+        } else {
             this.value = null;
         }
     }
+
     setValue(value) {
         // Set this Cell's value
         if (!this.editable) {
-            let m = "Cell (${this.coord.r},${this.coord.c}) is not editable\n";
+            let m = `Cell (${this.coord.r},${this.coord.c}) is not editable`;
             throw new Error(m);
         }
-        if (!isNaN(value) &&
+        if (
+            !isNaN(value) &&
             gameParams.minValue <= value &&
-            value <= gameParams.maxValue) 
-        {
+            value <= gameParams.maxValue
+        ) {
             this.value = value;
         } else {
-            throw new Error("Invalid cell value: ${value}\n");
+            throw new Error(`Invalid cell value: ${value}`);
         }
     }
 }
@@ -140,7 +145,7 @@ class Coord {
     }
     validateCoord(i) {
         if (i < gameParams.minCoord || i > gameParams.maxCoord) {
-            throw(new Error("Invalid cell coordinate: ${i}\n"));
+            throw new Error(`Invalid cell coordinate: ${i}`);
         }
         return i;
     }
@@ -245,9 +250,20 @@ function getOffMateOffsets(i) {
     // Assumes gridBase = 3
     let offsets = []
     switch (i % gameParams.gridBase) {
-    case 0: { offsets = [1,2];   break; }
-    case 1: { offsets = [-1,1];  break; }
-    case 2: { offsets = [-2,-1]; break; }
+        case 0: {
+            offsets = [1, 2];
+            break;
+        }
+        case 1: {
+            offsets = [-1, 1];
+            break;
+        }
+        case 2: {
+            offsets = [-2, -1];
+            break;
+        }
+        default:
+            break;
     }
     return offsets
 }

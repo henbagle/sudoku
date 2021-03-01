@@ -1,5 +1,7 @@
 import produce from "immer";
 
+// Handles adding a new gameState to the timeline based on the output of produceFunc
+
 export default function pushGameState(draft, produceFunc) {
     // If we are in the middle of the history, get rid of everything after currentState.
     if (draft.currentState < draft.gameStates.length - 1) {
