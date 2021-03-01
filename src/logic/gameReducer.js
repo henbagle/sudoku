@@ -2,11 +2,17 @@ import produce from "immer";
 import { emptyGrid } from "./generateGrid";
 import inputNumber from "./actions/inputNumber";
 import commitGame from "./actions/commitGame";
+import inputPossibleNumber from "./actions/inputPossibleNumber";
 
 const gameReducer = produce((draftState, action) => {
     switch (action.type) {
         case "INPUT_NUMBER": {
             inputNumber(draftState, action);
+            return;
+        }
+
+        case "INPUT_POSSIBLE_NUMBER": {
+            inputPossibleNumber(draftState, action);
             return;
         }
 

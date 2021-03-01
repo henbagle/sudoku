@@ -24,7 +24,11 @@ const SudokuGame = (props) => {
             selectCell={(c) => {setSelected(c)}}
             tryInputNumber={(e, coord) => {
                 dispatch({type: "INPUT_NUMBER", value:e.target.value, coord})
-            }}/>
+            }}
+            addPossibleValue={(e, coord) => {
+                dispatch({type: "INPUT_POSSIBLE_NUMBER", coord, event: e})
+            }
+            }/>
     </div> );
 }
  
