@@ -3,7 +3,17 @@ import pushGameState from "./pushGameState";
 export default function inputNumber(draft, action) {
     pushGameState(draft, (gs) => {
         // Set the new number
-        gs.cells[action.coord.index].value = parseSudokuNumber(action.value);
+        const targetCell = gs.cells[action.coord.index];
+        const desiredValue = parseSudokuNumber(action.value);
+        targetCell.value = desiredValue;
+
+        // Clear any possibilities
+        if (desiredValue !== null) {
+            targetCell.possibleValues = [];
+        }
+
+        // Check the game state for invalid cells
+        gs.invalidCells = gs.getInvalidCells();
     });
 }
 

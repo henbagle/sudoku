@@ -2,8 +2,8 @@ import React from 'react';
 
 const Cell = ({cell, onFocus, tryInputNumber, color}) => {
 
-    const inputClasses = `h-12 w-12 ${calculateBorderStyle(cell.coord)} ${calculateBgColor(color)} 
-                        focus:ring focus:ring-inset focus:bg-blue-50 
+    const inputClasses = `h-12 w-12 ${calculateBorderStyle(cell.coord)} ${calculateBgColor(cell, color)} 
+                        focus:ring focus:ring-inset 
                         text-2xl text-center ${cell.editable ? "": "font-semibold bg-white"}`
 
     const displayValue = ((cell.value === null) ? "" : cell.value)
@@ -35,14 +35,13 @@ function CellPossibleValues(props)
     else return null
 }
 
-function calculateBgColor(color)
+function calculateBgColor(cell, color)
 {
-    switch (color) {
-        case "row": return "bg-red-100";
-        case "col": return "bg-green-100";
-        case "grid": return "bg-yellow-100";
-        default: return "";
+    if(!cell.isValid || color == "red")
+    {
+        return "bg-red-100"
     }
+    else return "focus:bg-blue-50";
 }
 
 function calculateBorderStyle(coord)
