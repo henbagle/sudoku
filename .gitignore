@@ -118,6 +118,6 @@ dist
 # misc
 *.DS_Store
 *.code-workspace
-vscode/
+.vscode/
 *.swp
 
