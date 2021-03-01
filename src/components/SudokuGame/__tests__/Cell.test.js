@@ -31,7 +31,7 @@ test("Cell renders a form element", () => {
     fireEvent.focus(element);
     expect(testCellProps.onFocus).toHaveBeenCalled();
 
-    fireEvent.change(element, { target: { value: "1" } });
+    fireEvent.input(element, { target: { value: "1" } });
     expect(testCellProps.tryInputNumber).toHaveBeenCalled();
 });
 
