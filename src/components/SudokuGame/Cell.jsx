@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Cell = ({cell, onFocus, tryInputNumber, color}) => {
+const Cell = ({cell, onFocus, tryInputNumber, addPossibleValue, color}) => {
 
     const inputClasses = `h-12 w-12 ${calculateBorderStyle(cell.coord)} ${calculateBgColor(cell, color)} 
                         focus:ring focus:ring-inset 
@@ -15,7 +15,8 @@ const Cell = ({cell, onFocus, tryInputNumber, color}) => {
                 type="text" 
                 value={displayValue}
                 onFocus={onFocus}
-                onChange={tryInputNumber}
+                onInput={tryInputNumber}
+                onKeyDown={addPossibleValue}
                 className={inputClasses} 
                 disabled={!cell.editable}>
             </input>
